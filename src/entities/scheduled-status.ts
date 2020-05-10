@@ -1,10 +1,10 @@
-import { Attachment } from './attachment.ts';
-import { Status } from './status.ts';
+import { Attachment } from "./attachment.ts";
+import { Status } from "./status.ts";
 
-export interface StatusParams
-  extends Pick<
+export interface StatusParams extends
+  Pick<
     Status,
-    'id' | 'inReplyToId' | 'sensitive' | 'spoilerText' | 'visibility'
+    "id" | "inReplyToId" | "sensitive" | "spoilerText" | "visibility"
   > {
   /** Content of the status */
   text: string;

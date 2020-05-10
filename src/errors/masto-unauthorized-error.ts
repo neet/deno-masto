@@ -5,6 +5,6 @@
 export class MastoUnauthorizedError extends Error {
   constructor(...args: string[]) {
     super(...args);
-    this.name = 'MastoUnauthorizedError';
+    this.name = "MastoUnauthorizedError";
   }
 }

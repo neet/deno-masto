@@ -1,4 +1,4 @@
-import { Account } from './account.ts';
+import { Account } from "./account.ts";
 
 /**
  * Represents the software instance of Mastodon running on this domain.

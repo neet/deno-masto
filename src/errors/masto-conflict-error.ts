@@ -5,6 +5,6 @@
 export class MastoConflictError extends Error {
   constructor(...args: string[]) {
     super(...args);
-    this.name = 'MastoConflictError';
+    this.name = "MastoConflictError";
   }
 }

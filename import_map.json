@@ -1,10 +1,7 @@
 {
   "imports": {
-    "ws/": "https://deno.land/std/ws",
-    "testing/": "https://deno.land/std/testing/",
+    "ws/": "https://deno.land/std/ws/",
     "case/": "https://deno.land/x/case/",
-    "semver/": "https://deno.land/x/semver/",
-    "expect/": "https://deno.land/x/expect/",
-    "mock/": "https://deno.land/x/mock/"
+    "expect/": "https://deno.land/x/expect/"
   }
 }

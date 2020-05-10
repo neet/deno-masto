@@ -1,5 +1,5 @@
-import { Account } from './account.ts';
-import { Status } from './status.ts';
+import { Account } from "./account.ts";
+import { Status } from "./status.ts";
 
 /**
  * Represents a conversation with "direct message" visibility.

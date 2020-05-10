@@ -1,13 +1,13 @@
-import { Account } from './account.ts';
-import { Status } from './status.ts';
+import { Account } from "./account.ts";
+import { Status } from "./status.ts";
 
 export type NotificationType =
-  | 'mention'
-  | 'reblog'
-  | 'favourite'
-  | 'follow'
-  | 'poll'
-  | 'follow_request';
+  | "mention"
+  | "reblog"
+  | "favourite"
+  | "follow"
+  | "poll"
+  | "follow_request";
 
 /**
  * Represents a notification of an event relevant to the user.

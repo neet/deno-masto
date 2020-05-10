@@ -1,10 +1,10 @@
-import { AdminAccount, AdminReport } from '../../entities.ts';
-import { available, GatewayImpl } from '../../gateway.ts';
+import { AdminAccount, AdminReport } from "../../entities.ts";
+import { available, GatewayImpl } from "../../gateway.ts";
 import {
   AdminActionAccountParams,
   AdminFetchAccountParams,
   AdminFetchReportsParams,
-} from './params.ts';
+} from "./params.ts";
 
 /** Mastodon Moderation API client */
 export class MastoAdmin extends GatewayImpl {
@@ -15,9 +15,9 @@ export class MastoAdmin extends GatewayImpl {
    * @return Array of AdminAccount
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   fetchAccounts(params?: AdminFetchAccountParams) {
-    return this.get<AdminAccount[]>('/api/v1/admin/accounts', params);
+    return this.get<AdminAccount[]>("/api/v1/admin/accounts", params);
   }
 
   /**
@@ -26,7 +26,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminAccount
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   fetchAccount(id: string) {
     return this.get<AdminAccount>(`/api/v1/admin/accounts/${id}`);
   }
@@ -38,7 +38,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return Account
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   actionAccount(id: string, params: AdminActionAccountParams) {
     return this.post<AdminAccount>(
       `/api/v1/admin/accounts/${id}/action`,
@@ -52,7 +52,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminAccount
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   approveAccount(id: string) {
     return this.post<AdminAccount>(`/api/v1/admin/accounts/${id}/approve`);
   }
@@ -63,7 +63,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminAccount
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   rejectAccount(id: string) {
     return this.post<AdminAccount>(`/api/v1/admin/accounts/${id}/reject`);
   }
@@ -74,7 +74,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminAccount
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   enableAccount(id: string) {
     return this.post<AdminAccount>(`/api/v1/admin/accounts/${id}/enable`);
   }
@@ -85,7 +85,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminAccount
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   unsilenceAccount(id: string) {
     return this.post<AdminAccount>(`/api/v1/admin/accounts/${id}/unsilence`);
   }
@@ -96,7 +96,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminAccount
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   unsuspendAccount(id: string) {
     return this.post<AdminAccount>(`/api/v1/admin/accounts/${id}/unsuspend`);
   }
@@ -107,9 +107,9 @@ export class MastoAdmin extends GatewayImpl {
    * @return Array of AdminReport
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   fetchReports(params?: AdminFetchReportsParams) {
-    return this.get<AdminReport[]>('/api/v1/admin/reports', params);
+    return this.get<AdminReport[]>("/api/v1/admin/reports", params);
   }
 
   /**
@@ -118,7 +118,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminReport
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   fetchReport(id: string) {
     return this.get<AdminReport>(`/api/v1/admin/reports/${id}`);
   }
@@ -129,7 +129,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminReport
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   assignReportToSelf(id: string) {
     return this.post<AdminReport>(`/api/v1/admin/reports/${id}/assign_to_self`);
   }
@@ -140,7 +140,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminReport
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   unassignReport(id: string) {
     return this.post<AdminReport>(`/api/v1/admin/reports/${id}/unassign`);
   }
@@ -151,7 +151,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminReport
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   resolveReport(id: string) {
     return this.post<AdminReport>(`/api/v1/admin/reports/${id}/resolve`);
   }
@@ -162,7 +162,7 @@ export class MastoAdmin extends GatewayImpl {
    * @return AdminReport
    * @see https://docs.joinmastodon.org/methods/admin/
    */
-  @available({ since: '2.9.1' })
+  @available({ since: "2.9.1" })
   reopenReport(id: string) {
     return this.post<AdminReport>(`/api/v1/admin/reports/${id}/reopen`);
   }

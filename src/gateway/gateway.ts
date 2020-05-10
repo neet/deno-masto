@@ -4,15 +4,15 @@
  */
 export type PaginateNext<Params> =
   | {
-      reset: boolean;
-      url?: undefined;
-      params?: undefined;
-    }
+    reset: boolean;
+    url?: undefined;
+    params?: undefined;
+  }
   | {
-      reset?: undefined;
-      url?: string;
-      params?: Params;
-    };
+    reset?: undefined;
+    url?: string;
+    params?: Params;
+  };
 
 export interface Gateway {
   uri: string;
@@ -27,11 +27,11 @@ export interface Gateway {
   paginate<T, U>(
     url: string,
     data?: U,
-    options?: RequestInit
+    options?: RequestInit,
   ): AsyncGenerator<T, void, PaginateNext<U>>;
   stream<T>(
     path: string,
-    data: unknown
+    data: unknown,
   ): Promise<AsyncGenerator<T, void, void>>;
 }
 

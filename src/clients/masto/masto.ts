@@ -59,7 +59,7 @@ import {
   UpdatePushSubscriptionParams,
   UpdateScheduledStatusParams,
   VotePollParams,
-} from "./params";
+} from "./params.ts";
 
 /** Mastodon API client */
 export class Masto extends GatewayImpl {
@@ -228,7 +228,7 @@ export class Masto extends GatewayImpl {
     return this.patch<AccountCredentials>(
       "/api/v1/accounts/update_credentials",
       params,
-      { headers: { "Content-Type": "multipart/form-data" } }
+      { headers: { "Content-Type": "multipart/form-data" } },
     );
   }
 
@@ -243,7 +243,7 @@ export class Masto extends GatewayImpl {
   fetchAccountFollowers(id: string, params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/accounts/${id}/followers`,
-      params
+      params,
     );
   }
 
@@ -258,7 +258,7 @@ export class Masto extends GatewayImpl {
   fetchAccountFollowing(id: string, params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/accounts/${id}/following`,
-      params
+      params,
     );
   }
 
@@ -273,7 +273,7 @@ export class Masto extends GatewayImpl {
   fetchAccountStatuses(id: string, params?: FetchAccountStatusesParams) {
     return this.paginate<Status[], typeof params>(
       `/api/v1/accounts/${id}/statuses`,
-      params
+      params,
     );
   }
 
@@ -398,7 +398,7 @@ export class Masto extends GatewayImpl {
   fetchDomainBlocks(params?: PaginationParams) {
     return this.paginate<string[], typeof params>(
       `/api/v1/domain_blocks`,
-      params
+      params,
     );
   }
 
@@ -441,7 +441,7 @@ export class Masto extends GatewayImpl {
   fetchEndorsements(params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/endorsements`,
-      params
+      params,
     );
   }
 
@@ -565,7 +565,7 @@ export class Masto extends GatewayImpl {
   fetchFollowRequests(params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/follow_requests`,
-      params
+      params,
     );
   }
 
@@ -601,7 +601,7 @@ export class Masto extends GatewayImpl {
   fetchSuggestions(params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       "/api/v1/suggestions",
-      params
+      params,
     );
   }
 
@@ -723,7 +723,7 @@ export class Masto extends GatewayImpl {
   fetchListAccounts(id: string, params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/list/${id}/accounts`,
-      params
+      params,
     );
   }
 
@@ -844,7 +844,7 @@ export class Masto extends GatewayImpl {
   fetchNotifications(params?: FetchNotificationsParams) {
     return this.paginate<Notification[], typeof params>(
       "/api/v1/notifications",
-      params
+      params,
     );
   }
 
@@ -968,7 +968,7 @@ export class Masto extends GatewayImpl {
   fetchScheduledStatuses(params?: PaginationParams) {
     return this.paginate<ScheduledStatus[], typeof params>(
       "/api/v1/scheduled_statuses",
-      params
+      params,
     );
   }
 
@@ -994,7 +994,7 @@ export class Masto extends GatewayImpl {
   updateScheduledStatus(id: string, params: UpdateScheduledStatusParams) {
     return this.put<ScheduledStatus>(
       `/api/v1/scheduled_statuses/${id}`,
-      params
+      params,
     );
   }
 
@@ -1192,7 +1192,7 @@ export class Masto extends GatewayImpl {
   fetchHomeTimeline(params?: FetchTimelineParams) {
     return this.paginate<Status[], typeof params>(
       "/api/v1/timelines/home",
-      params
+      params,
     );
   }
 
@@ -1220,7 +1220,7 @@ export class Masto extends GatewayImpl {
   fetchTagTimeline(hashtag: string, params?: FetchTimelineParams) {
     return this.paginate<Status[], typeof params>(
       `/api/v1/timelines/tag/${hashtag}`,
-      params
+      params,
     );
   }
 
@@ -1235,7 +1235,7 @@ export class Masto extends GatewayImpl {
   fetchListTimeline(id: string, params?: FetchTimelineParams) {
     return this.paginate<Status[], typeof params>(
       `/api/v1/timelines/list/${id}`,
-      params
+      params,
     );
   }
 
@@ -1249,7 +1249,7 @@ export class Masto extends GatewayImpl {
   fetchDirectTimeline(params?: FetchTimelineParams) {
     return this.paginate<Status[], typeof params>(
       "/api/v1/timelines/direct",
-      params
+      params,
     );
   }
 
@@ -1263,7 +1263,7 @@ export class Masto extends GatewayImpl {
   fetchConversations(params?: PaginationParams) {
     return this.paginate<Conversation[], typeof params>(
       "/api/v1/conversations",
-      params
+      params,
     );
   }
 
@@ -1435,7 +1435,7 @@ export class Masto extends GatewayImpl {
   @available({ since: "3.1.0" })
   removeReactionFromAnnouncement(id: string, name: string) {
     return this.delete<Reaction>(
-      `/api/v1/announcements/${id}/reactions/${name}`
+      `/api/v1/announcements/${id}/reactions/${name}`,
     );
   }
 }

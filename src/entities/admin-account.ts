@@ -1,6 +1,6 @@
-import { Account } from './account.ts';
+import { Account } from "./account.ts";
 
-export type AdminAccountRole = 'moderator' | 'admin' | 'user';
+export type AdminAccountRole = "moderator" | "admin" | "user";
 
 /**
  * Admin-level information about a given account.

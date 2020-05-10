@@ -5,6 +5,6 @@
 export class MastoNotFoundError extends Error {
   constructor(...args: string[]) {
     super(...args);
-    this.name = 'MastoNotFoundError';
+    this.name = "MastoNotFoundError";
   }
 }

@@ -7,7 +7,7 @@ import {
   PushSubscriptionAlerts,
   Source,
   StatusVisibility,
-} from '../../entities.ts';
+} from "../../entities.ts";
 
 export interface PaginationParams {
   /** **Internal parameter.** Use HTTP Link header from response for pagination. */
@@ -35,7 +35,7 @@ export interface UpdateCredentialsParams {
   header?: unknown;
   /** Whether manual approval of follow requests is required. */
   locked?: boolean | null;
-  source?: Partial<Pick<Source, 'privacy' | 'sensitive' | 'language'>> | null;
+  source?: Partial<Pick<Source, "privacy" | "sensitive" | "language">> | null;
   /**
    * Profile metadata `name` and `value`.
    * (By default, max 4 fields and 255 characters per property/value)
@@ -84,7 +84,7 @@ export interface CreateAppParams {
   website?: string | null;
 }
 
-export type GrantType = 'authorization_code' | 'password';
+export type GrantType = "authorization_code" | "password";
 
 export interface FetchAccessTokenParamsBase<T extends GrantType> {
   /** Grant type */
@@ -92,7 +92,7 @@ export interface FetchAccessTokenParamsBase<T extends GrantType> {
 }
 
 export interface FetchAccessTokenParamsWithAuthorizationCode
-  extends FetchAccessTokenParamsBase<'authorization_code'> {
+  extends FetchAccessTokenParamsBase<"authorization_code"> {
   /** Authorization code */
   code: string;
   /** Redirect URI which used for the authorization */
@@ -104,7 +104,7 @@ export interface FetchAccessTokenParamsWithAuthorizationCode
 }
 
 export interface FetchAccessTokenParamsWithPassword
-  extends FetchAccessTokenParamsBase<'password'> {
+  extends FetchAccessTokenParamsBase<"password"> {
   /** Password */
   password: string;
   /** Username */
@@ -187,7 +187,7 @@ export interface CreatePushSubscriptionParams {
 
 export type UpdatePushSubscriptionParams = Pick<
   CreatePushSubscriptionParams,
-  'data'
+  "data"
 >;
 
 export interface FollowAccountParams {
@@ -200,7 +200,7 @@ export interface MuteAccountParams {
   notifications?: boolean;
 }
 
-export type SearchType = 'accounts' | 'hashtags' | 'statuses';
+export type SearchType = "accounts" | "hashtags" | "statuses";
 
 export interface SearchParams extends PaginationParams {
   /** Attempt WebFinger lookup. Defaults to false. */
@@ -315,8 +315,10 @@ export interface FetchMarkersParams {
 }
 
 export type CreateMarkersParams = {
-  /** ID of the last status read in the timeline. */
-  [key in MarkerTimeline]: Pick<MarkerItem, 'lastReadId'>;
+  [
+    /** ID of the last status read in the timeline. */
+    key in MarkerTimeline
+  ]: Pick<MarkerItem, "lastReadId">;
 };
 
 export interface CreateFeaturedTagParams {
@@ -324,7 +326,7 @@ export interface CreateFeaturedTagParams {
   name: string;
 }
 
-export type DirectoryOrderType = 'active' | 'new';
+export type DirectoryOrderType = "active" | "new";
 
 export interface FetchDirectoryParams {
   /** How many accounts to load. Default 40. */

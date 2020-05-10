@@ -5,6 +5,6 @@
 export class MastoUnprocessableEntityError extends Error {
   constructor(...args: string[]) {
     super(...args);
-    this.name = 'MastoUnprocessableEntityError';
+    this.name = "MastoUnprocessableEntityError";
   }
 }

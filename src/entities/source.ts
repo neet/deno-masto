@@ -1,5 +1,5 @@
-import { Field } from './field.ts';
-import { StatusVisibility } from './status.ts'
+import { Field } from "./field.ts";
+import { StatusVisibility } from "./status.ts";
 
 /**
  * Represents display or publishing preferences of user's own account.

@@ -1,4 +1,4 @@
-export type AttachmentType = 'image' | 'video' | 'gifv' | 'audio' | 'unknown';
+export type AttachmentType = "image" | "video" | "gifv" | "audio" | "unknown";
 
 export interface AttachmentMetaImage {
   width: number;

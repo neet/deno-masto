@@ -34,7 +34,7 @@ export interface AdminFetchReportsParams {
   byTargetDomain?: string | null;
 }
 
-export type AccountActionType = 'none' | 'disable' | 'silence' | 'suspend';
+export type AccountActionType = "none" | "disable" | "silence" | "suspend";
 
 export interface AdminActionAccountParams {
   /** Type of action to be taken. Enumerable oneOf: `none` `disable` `silence` `suspend` */

@@ -42,7 +42,7 @@ export class GatewayImpl implements Gateway {
 
   static async login<T extends typeof GatewayImpl>(
     this: T,
-    params: LoginParams
+    params: LoginParams,
   ) {
     const gateway = new this(params) as InstanceType<T>;
     const instance = await gateway.get<Instance>("/api/v1/instance");
@@ -102,7 +102,7 @@ export class GatewayImpl implements Gateway {
   private async request<T>(
     rawUrl: string,
     rawData: unknown,
-    rawInit: RequestInit
+    rawInit: RequestInit,
   ) {
     const url = new URL(rawUrl, this.uri);
     const data = transformKeys(rawData, snakeCase);
@@ -188,7 +188,7 @@ export class GatewayImpl implements Gateway {
   async *paginate<T, U>(
     initialUrl: string,
     initialParams?: U,
-    init?: RequestInit
+    init?: RequestInit,
   ): AsyncGenerator<T, void, PaginateNext<U> | undefined> {
     let nextUrl: string | undefined = initialUrl;
     let nextParams = initialParams;
@@ -201,7 +201,7 @@ export class GatewayImpl implements Gateway {
 
       const options = yield response.data;
       const linkHeaderNext = response.headers?.link?.match(
-        /<(.+?)>; rel="next"/
+        /<(.+?)>; rel="next"/,
       )?.[1];
 
       if (options?.reset) {

@@ -1,4 +1,4 @@
-export type CardType = 'link' | 'photo' | 'video' | 'rich';
+export type CardType = "link" | "photo" | "video" | "rich";
 
 /**
  * Represents a rich preview card that is generated using OpenGraph tags from a URL.
