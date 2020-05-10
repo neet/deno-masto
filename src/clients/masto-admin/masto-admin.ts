@@ -1,10 +1,10 @@
-import { AdminAccount, AdminReport } from '../../entities';
-import { available, GatewayImpl } from '../../gateway';
+import { AdminAccount, AdminReport } from '../../entities.ts';
+import { available, GatewayImpl } from '../../gateway.ts';
 import {
   AdminActionAccountParams,
   AdminFetchAccountParams,
   AdminFetchReportsParams,
-} from './params';
+} from './params.ts';
 
 /** Mastodon Moderation API client */
 export class MastoAdmin extends GatewayImpl {

@@ -1,5 +1,3 @@
-import semver from 'semver';
-
 import {
   Account,
   AccountCredentials,
@@ -28,8 +26,8 @@ import {
   Status,
   Tag,
   Token,
-} from '../../entities';
-import { available, GatewayImpl } from '../../gateway';
+} from "../../entities.ts";
+import { available, GatewayImpl } from "../../gateway.ts";
 import {
   CreateAccountParams,
   CreateAppParams,
@@ -61,7 +59,7 @@ import {
   UpdatePushSubscriptionParams,
   UpdateScheduledStatusParams,
   VotePollParams,
-} from './params';
+} from "./params";
 
 /** Mastodon API client */
 export class Masto extends GatewayImpl {
@@ -70,10 +68,10 @@ export class Masto extends GatewayImpl {
    * @return Instance of EventEmitter
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   streamUser() {
-    return this.stream('/api/v1/streaming', {
-      stream: 'user',
+    return this.stream("/api/v1/streaming", {
+      stream: "user",
     });
   }
 
@@ -82,10 +80,10 @@ export class Masto extends GatewayImpl {
    * @return Instance of EventEmitter
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   streamPublicTimeline() {
-    return this.stream('/api/v1/streaming', {
-      stream: 'public',
+    return this.stream("/api/v1/streaming", {
+      stream: "public",
     });
   }
 
@@ -94,10 +92,10 @@ export class Masto extends GatewayImpl {
    * @return Instance of EventEmitter
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   streamCommunityTimeline() {
-    return this.stream('/api/v1/streaming', {
-      stream: 'public:local',
+    return this.stream("/api/v1/streaming", {
+      stream: "public:local",
     });
   }
 
@@ -107,10 +105,10 @@ export class Masto extends GatewayImpl {
    * @return Instance of EventEmitter
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   streamTagTimeline(id: string) {
-    return this.stream('/api/v1/streaming', {
-      stream: 'hashtag',
+    return this.stream("/api/v1/streaming", {
+      stream: "hashtag",
       tag: id,
     });
   }
@@ -121,10 +119,10 @@ export class Masto extends GatewayImpl {
    * @return Instance of EventEmitter
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   streamLocalTagTimeline(id: string) {
-    return this.stream('/api/v1/streaming', {
-      stream: 'hashtag:local',
+    return this.stream("/api/v1/streaming", {
+      stream: "hashtag:local",
       tag: id,
     });
   }
@@ -135,10 +133,10 @@ export class Masto extends GatewayImpl {
    * @return Instance of EventEmitter
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   streamListTimeline(id: string) {
-    return this.stream('/api/v1/streaming', {
-      stream: 'list',
+    return this.stream("/api/v1/streaming", {
+      stream: "list",
       list: id,
     });
   }
@@ -148,10 +146,10 @@ export class Masto extends GatewayImpl {
    * @return Instance of EventEmitter
    * @see https://docs.joinmastodon.org/methods/timelines/streaming/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   streamDirectTimeline() {
-    return this.stream('/api/v1/streaming', {
-      stream: 'direct',
+    return this.stream("/api/v1/streaming", {
+      stream: "direct",
     });
   }
 
@@ -162,7 +160,7 @@ export class Masto extends GatewayImpl {
    * @see https://docs.joinmastodon.org/methods/apps/oauth/
    */
   fetchAccessToken(params: FetchAccessTokenParams) {
-    return this.post<Token>('/oauth/token', params);
+    return this.post<Token>("/oauth/token", params);
   }
 
   /**
@@ -171,7 +169,7 @@ export class Masto extends GatewayImpl {
    * @see https://docs.joinmastodon.org/methods/apps/oauth/
    */
   revokeAccessToken(params: RevokeAccessTokenParams) {
-    return this.post<void>('/oauth/revoke', params);
+    return this.post<void>("/oauth/revoke", params);
   }
 
   /**
@@ -180,7 +178,7 @@ export class Masto extends GatewayImpl {
    * @return Account
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchAccount(id: string) {
     return this.get<Account>(`/api/v1/accounts/${id}`);
   }
@@ -191,7 +189,7 @@ export class Masto extends GatewayImpl {
    * @return Array of IdentityProof
    * @see https://github.com/tootsuite/mastodon/pull/10297
    */
-  @available({ since: '2.8.0' })
+  @available({ since: "2.8.0" })
   fetchAccountIdentityProofs(id: string) {
     return this.get<IdentityProof[]>(`/api/v1/accounts/${id}/identity_proofs`);
   }
@@ -204,9 +202,9 @@ export class Masto extends GatewayImpl {
    * @return Token
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '2.7.0' })
+  @available({ since: "2.7.0" })
   createAccount(params: CreateAccountParams) {
-    return this.post<Token>('/api/v1/accounts', params);
+    return this.post<Token>("/api/v1/accounts", params);
   }
 
   /**
@@ -214,9 +212,9 @@ export class Masto extends GatewayImpl {
    * @return the user's own Account with Source
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   verifyCredentials() {
-    return this.get<AccountCredentials>('/api/v1/accounts/verify_credentials');
+    return this.get<AccountCredentials>("/api/v1/accounts/verify_credentials");
   }
 
   /**
@@ -225,12 +223,12 @@ export class Masto extends GatewayImpl {
    * @return the user's own Account with Source
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   updateCredentials(params?: UpdateCredentialsParams) {
     return this.patch<AccountCredentials>(
-      '/api/v1/accounts/update_credentials',
+      "/api/v1/accounts/update_credentials",
       params,
-      { headers: { 'Content-Type': 'multipart/form-data' } },
+      { headers: { "Content-Type": "multipart/form-data" } }
     );
   }
 
@@ -241,11 +239,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchAccountFollowers(id: string, params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/accounts/${id}/followers`,
-      params,
+      params
     );
   }
 
@@ -256,11 +254,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchAccountFollowing(id: string, params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/accounts/${id}/following`,
-      params,
+      params
     );
   }
 
@@ -271,11 +269,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Status
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchAccountStatuses(id: string, params?: FetchAccountStatusesParams) {
     return this.paginate<Status[], typeof params>(
       `/api/v1/accounts/${id}/statuses`,
-      params,
+      params
     );
   }
 
@@ -286,7 +284,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   followAccount(id: string, params?: FollowAccountParams) {
     return this.post<Relationship>(`/api/v1/accounts/${id}/follow`, params);
   }
@@ -297,7 +295,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   unfollowAccount(id: string) {
     return this.post<Relationship>(`/api/v1/accounts/${id}/unfollow`);
   }
@@ -308,7 +306,7 @@ export class Masto extends GatewayImpl {
    * @return Array of Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchAccountRelationships(id: string[]) {
     return this.get<Relationship[]>(`/api/v1/accounts/relationships`, {
       id,
@@ -321,7 +319,7 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   searchAccounts(params?: SearchAccountsParams) {
     return this.get<Account[]>(`/api/v1/accounts/search`, params);
   }
@@ -332,7 +330,7 @@ export class Masto extends GatewayImpl {
    * @return Returns App with `client_id` and `client_secret`
    * @see https://docs.joinmastodon.org/methods/apps/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   createApp(params: CreateAppParams) {
     return this.post<Client>(`/api/v1/apps`, params);
   }
@@ -342,7 +340,7 @@ export class Masto extends GatewayImpl {
    * @return Application
    * @see https://docs.joinmastodon.org/methods/apps/
    */
-  @available({ since: '2.0.0' })
+  @available({ since: "2.0.0" })
   verifyAppCredentials() {
     return this.get<Client>(`/api/v1/apps/verify_credentials`);
   }
@@ -353,7 +351,7 @@ export class Masto extends GatewayImpl {
    * @return Query parameter
    * @see https://docs.joinmastodon.org/methods/accounts/blocks/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchBlocks(params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(`/api/v1/blocks`, params);
   }
@@ -364,7 +362,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   blockAccount(id: string) {
     return this.post<Relationship>(`/api/v1/accounts/${id}/block`);
   }
@@ -375,7 +373,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   unblockAccount(id: string) {
     return this.post<Relationship>(`/api/v1/accounts/${id}/unblock`);
   }
@@ -385,7 +383,7 @@ export class Masto extends GatewayImpl {
    * @return Array of Emoji
    * @see https://docs.joinmastodon.org/methods/instance/custom_emojis/
    */
-  @available({ since: '2.0.0' })
+  @available({ since: "2.0.0" })
   fetchCustomEmojis() {
     return this.get<Emoji[]>(`/api/v1/custom_emojis`);
   }
@@ -396,11 +394,11 @@ export class Masto extends GatewayImpl {
    * @return Array of strings
    * @see https://docs.joinmastodon.org/methods/accounts/domain_blocks/
    */
-  @available({ since: '1.4.0' })
+  @available({ since: "1.4.0" })
   fetchDomainBlocks(params?: PaginationParams) {
     return this.paginate<string[], typeof params>(
       `/api/v1/domain_blocks`,
-      params,
+      params
     );
   }
 
@@ -414,7 +412,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/accounts/domain_blocks/
    */
-  @available({ since: '1.4.0' })
+  @available({ since: "1.4.0" })
   blockDomain(domain: string) {
     return this.post<void>(`/api/v1/domain_blocks`, {
       domain,
@@ -427,7 +425,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/accounts/domain_blocks/
    */
-  @available({ since: '1.4.0' })
+  @available({ since: "1.4.0" })
   unblockDomain(domain: string) {
     return this.delete<void>(`/api/v1/domain_blocks`, {
       domain,
@@ -439,11 +437,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/accounts/endorsements/
    */
-  @available({ since: '2.5.0' })
+  @available({ since: "2.5.0" })
   fetchEndorsements(params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/endorsements`,
-      params,
+      params
     );
   }
 
@@ -453,7 +451,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '2.5.0' })
+  @available({ since: "2.5.0" })
   pinAccount(id: string) {
     return this.post<Relationship>(`/api/v1/accounts/${id}/pin`);
   }
@@ -464,7 +462,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '2.5.0' })
+  @available({ since: "2.5.0" })
   unpinAccount(id: string) {
     return this.post<Relationship>(`/api/v1/accounts/${id}/unpin`);
   }
@@ -475,7 +473,7 @@ export class Masto extends GatewayImpl {
    * @return Array of Status
    * @see https://docs.joinmastodon.org/methods/accounts/favourites/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchFavourites(params?: PaginationParams) {
     return this.paginate<Status[], typeof params>(`/api/v1/favourites`, params);
   }
@@ -486,7 +484,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   favouriteStatus(id: string) {
     return this.post<Status>(`/api/v1/statuses/${id}/favourite`);
   }
@@ -497,7 +495,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   unfavouriteStatus(id: string) {
     return this.post<Status>(`/api/v1/statuses/${id}/unfavourite`);
   }
@@ -507,7 +505,7 @@ export class Masto extends GatewayImpl {
    * @return Filter
    * @see https://docs.joinmastodon.org/methods/accounts/filters/
    */
-  @available({ since: '2.4.3' })
+  @available({ since: "2.4.3" })
   fetchFilters() {
     return this.get<Filter[]>(`/api/v1/filters`);
   }
@@ -518,7 +516,7 @@ export class Masto extends GatewayImpl {
    * @return Returns Filter
    * @see https://docs.joinmastodon.org/methods/accounts/filters/
    */
-  @available({ since: '2.4.3' })
+  @available({ since: "2.4.3" })
   fetchFilter(id: string) {
     return this.get<Filter>(`/api/v1/filters/${id}`);
   }
@@ -529,7 +527,7 @@ export class Masto extends GatewayImpl {
    * @return Filter
    * @see https://docs.joinmastodon.org/methods/accounts/filters/
    */
-  @available({ since: '2.4.3' })
+  @available({ since: "2.4.3" })
   createFilter(params?: ModifyFilterParams) {
     return this.post<Filter>(`/api/v1/filters`, params);
   }
@@ -541,7 +539,7 @@ export class Masto extends GatewayImpl {
    * @return Filter
    * @see https://docs.joinmastodon.org/methods/accounts/filters/
    */
-  @available({ since: '2.4.3' })
+  @available({ since: "2.4.3" })
   updateFilter(id: string, params?: ModifyFilterParams) {
     return this.put<Filter>(`/api/v1/filters/${id}`, params);
   }
@@ -552,7 +550,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/accounts/filters/
    */
-  @available({ since: '2.4.3' })
+  @available({ since: "2.4.3" })
   removeFilter(id: string) {
     return this.delete<void>(`/api/v1/filters/${id}`);
   }
@@ -563,11 +561,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/accounts/follow_requests/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchFollowRequests(params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/follow_requests`,
-      params,
+      params
     );
   }
 
@@ -577,7 +575,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/follow_requests/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   authorizeFollowRequest(id: string) {
     return this.post<Relationship>(`/api/v1/follow_requests/${id}/authorize`);
   }
@@ -588,7 +586,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/follow_requests/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   rejectFollowRequest(id: string) {
     return this.post<Relationship>(`/api/v1/follow_requests/${id}/reject`);
   }
@@ -599,11 +597,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/accounts/suggestions/
    */
-  @available({ since: '2.4.3' })
+  @available({ since: "2.4.3" })
   fetchSuggestions(params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
-      '/api/v1/suggestions',
-      params,
+      "/api/v1/suggestions",
+      params
     );
   }
 
@@ -613,7 +611,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/accounts/suggestions/
    */
-  @available({ since: '2.4.3' })
+  @available({ since: "2.4.3" })
   removeSuggestion(id: string) {
     return this.delete<void>(`/api/v1/suggestions/${id}`);
   }
@@ -623,9 +621,9 @@ export class Masto extends GatewayImpl {
    * @return Instance
    * @see https://docs.joinmastodon.org/methods/instance/
    */
-  @available({ since: '1.0.0' })
+  @available({ since: "1.0.0" })
   fetchInstance() {
-    return this.get<Instance>('/api/v1/instance');
+    return this.get<Instance>("/api/v1/instance");
   }
 
   /**
@@ -633,9 +631,9 @@ export class Masto extends GatewayImpl {
    * @return Array of Activity
    * @see https://docs.joinmastodon.org/methods/instance/
    */
-  @available({ since: '2.1.2' })
+  @available({ since: "2.1.2" })
   fetchInstancesPeers() {
-    return this.get<string[]>('/api/v1/instance/peers');
+    return this.get<string[]>("/api/v1/instance/peers");
   }
 
   /**
@@ -643,9 +641,9 @@ export class Masto extends GatewayImpl {
    * @return Array of Activity
    * @see https://docs.joinmastodon.org/methods/instance/
    */
-  @available({ since: '2.1.2' })
+  @available({ since: "2.1.2" })
   fetchInstanceActivity() {
-    return this.get<Activity[]>('/api/v1/instance/activity');
+    return this.get<Activity[]>("/api/v1/instance/activity");
   }
 
   /**
@@ -653,9 +651,9 @@ export class Masto extends GatewayImpl {
    * @return Array of List
    * @see https://docs.joinmastodon.org/methods/timelines/lists/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   fetchLists() {
-    return this.get<List[]>('/api/v1/lists');
+    return this.get<List[]>("/api/v1/lists");
   }
 
   /**
@@ -664,7 +662,7 @@ export class Masto extends GatewayImpl {
    * @return Array of List
    * @see https://docs.joinmastodon.org/methods/timelines/lists/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   fetchAccountLists(id: string) {
     return this.get<List[]>(`/api/v1/accounts/${id}/lists`);
   }
@@ -675,7 +673,7 @@ export class Masto extends GatewayImpl {
    * @return List
    * @see https://docs.joinmastodon.org/methods/timelines/lists/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   fetchList(id: string) {
     return this.get<List>(`/api/v1/lists/${id}`);
   }
@@ -686,9 +684,9 @@ export class Masto extends GatewayImpl {
    * @return List
    * @see https://docs.joinmastodon.org/methods/timelines/lists/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   createList(params: ModifyListParams) {
-    return this.post<List>('/api/v1/lists', params);
+    return this.post<List>("/api/v1/lists", params);
   }
 
   /**
@@ -698,7 +696,7 @@ export class Masto extends GatewayImpl {
    * @return List
    * @see https://docs.joinmastodon.org/methods/timelines/lists/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   updateList(id: string, params: ModifyListParams) {
     return this.put<List>(`/api/v1/lists/${id}`, params);
   }
@@ -709,7 +707,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/timelines/lists/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   removeList(id: string) {
     return this.delete<void>(`/api/v1/lists/${id}`);
   }
@@ -721,11 +719,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/timelines/lists/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   fetchListAccounts(id: string, params?: PaginationParams) {
     return this.paginate<Account[], typeof params>(
       `/api/v1/list/${id}/accounts`,
-      params,
+      params
     );
   }
 
@@ -736,7 +734,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/timelines/lists/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   addAccountToList(id: string, params: ModifyListAccountsParams) {
     return this.post<void>(`/api/v1/lists/${id}/accounts`, params);
   }
@@ -748,7 +746,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/timelines/lists/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   removeAccountFromList(id: string, params: ModifyListAccountsParams) {
     return this.delete<void>(`/api/v1/lists/${id}/accounts`, params);
   }
@@ -759,11 +757,10 @@ export class Masto extends GatewayImpl {
    * @return Attachment
    * @see https://docs.joinmastodon.org/methods/statuses/media/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   createMediaAttachment(params: CreateMediaAttachmentParams) {
-    const v = semver.gt(this.version, '3.1.3') ? 'v2' : 'v1';
-    return this.post<Attachment>(`/api/${v}/media`, params, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    return this.post<Attachment>(`/api/v2/media`, params, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
   }
 
@@ -774,7 +771,7 @@ export class Masto extends GatewayImpl {
    * @return Attachment
    * @see https://docs.joinmastodon.org/api/rest/media/#put-api-v1-media-id
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   updateMediaAttachment(id: string, params: UpdateMediaAttachmentParams) {
     return this.put<Attachment>(`/api/v1/media/${id}`, params);
   }
@@ -785,9 +782,9 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/accounts/mutes/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchMutes(params?: PaginationParams) {
-    return this.paginate<Account[], typeof params>('/api/v1/mutes', params);
+    return this.paginate<Account[], typeof params>("/api/v1/mutes", params);
   }
 
   /**
@@ -797,7 +794,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   muteAccount(id: string, params?: MuteAccountParams) {
     return this.post<Relationship>(`/api/v1/accounts/${id}/mute`, params);
   }
@@ -808,7 +805,7 @@ export class Masto extends GatewayImpl {
    * @return Relationship
    * @see https://docs.joinmastodon.org/methods/accounts/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   unmuteAccount(id: string) {
     return this.post<Relationship>(`/api/v1/accounts/${id}/unmute`);
   }
@@ -819,7 +816,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '1.4.2' })
+  @available({ since: "1.4.2" })
   muteStatus(id: string) {
     return this.post<Status>(`/api/v1/statuses/${id}/mute`);
   }
@@ -830,7 +827,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '1.4.2' })
+  @available({ since: "1.4.2" })
   unmuteStatus(id: string) {
     return this.post<Status>(`/api/v1/statuses/${id}/unmute`);
   }
@@ -843,11 +840,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Notification
    * @see https://docs.joinmastodon.org/methods/notifications/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchNotifications(params?: FetchNotificationsParams) {
     return this.paginate<Notification[], typeof params>(
-      '/api/v1/notifications',
-      params,
+      "/api/v1/notifications",
+      params
     );
   }
 
@@ -857,7 +854,7 @@ export class Masto extends GatewayImpl {
    * @return Notification
    * @see https://docs.joinmastodon.org/methods/notifications/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchNotification(id: string) {
     return this.get<Notification>(`/api/v1/notifications/${id}`);
   }
@@ -867,9 +864,9 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/notifications/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   clearNotifications() {
-    return this.post<void>('/api/v1/notifications/clear');
+    return this.post<void>("/api/v1/notifications/clear");
   }
 
   /**
@@ -878,7 +875,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/notifications/
    */
-  @available({ since: '2.6.0' })
+  @available({ since: "2.6.0" })
   dismissNotification(id: string) {
     return this.post<void>(`/api/v1/notifications/${id}/dismiss`);
   }
@@ -891,9 +888,9 @@ export class Masto extends GatewayImpl {
    * @return Returns Push Subscription
    * @see https://docs.joinmastodon.org/methods/notifications/push/
    */
-  @available({ since: '2.4.0' })
+  @available({ since: "2.4.0" })
   createPushSubscription(params: CreatePushSubscriptionParams) {
-    return this.post<PushSubscription>('/api/v1/push/subscription', params);
+    return this.post<PushSubscription>("/api/v1/push/subscription", params);
   }
 
   /**
@@ -901,9 +898,9 @@ export class Masto extends GatewayImpl {
    * @return PushSubscription
    * @see https://docs.joinmastodon.org/methods/notifications/push/
    */
-  @available({ since: '2.4.0' })
+  @available({ since: "2.4.0" })
   fetchPushSubscription() {
-    return this.get<PushSubscription>('/api/v1/push/subscription');
+    return this.get<PushSubscription>("/api/v1/push/subscription");
   }
 
   /**
@@ -912,9 +909,9 @@ export class Masto extends GatewayImpl {
    * @return PushSubscription
    * @see https://docs.joinmastodon.org/methods/notifications/push/
    */
-  @available({ since: '2.4.0' })
+  @available({ since: "2.4.0" })
   updatePushSubscription(params: UpdatePushSubscriptionParams) {
-    return this.put<PushSubscription>('/api/v1/push/subscription', params);
+    return this.put<PushSubscription>("/api/v1/push/subscription", params);
   }
 
   /**
@@ -922,9 +919,9 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/notifications/push/
    */
-  @available({ since: '2.4.0' })
+  @available({ since: "2.4.0" })
   removePushSubscription() {
-    return this.delete<void>('/api/v1/push/subscription');
+    return this.delete<void>("/api/v1/push/subscription");
   }
 
   /**
@@ -933,7 +930,7 @@ export class Masto extends GatewayImpl {
    * @return Poll
    * @see https://docs.joinmastodon.org/methods/statuses/polls/
    */
-  @available({ since: '2.8.0' })
+  @available({ since: "2.8.0" })
   fetchPoll(id: string) {
     return this.get<Poll>(`/api/v1/polls/${id}`);
   }
@@ -945,7 +942,7 @@ export class Masto extends GatewayImpl {
    * @return Poll
    * @see https://docs.joinmastodon.org/methods/statuses/polls/
    */
-  @available({ since: '2.8.0' })
+  @available({ since: "2.8.0" })
   votePoll(id: string, params: VotePollParams) {
     return this.post<Poll>(`/api/v1/polls/${id}/votes`, params);
   }
@@ -956,9 +953,9 @@ export class Masto extends GatewayImpl {
    * @return Report
    * @see https://docs.joinmastodon.org/methods/accounts/reports/
    */
-  @available({ since: '1.1.0' })
+  @available({ since: "1.1.0" })
   reportAccount(params: ReportAccountParams) {
-    return this.post<void>('/api/v1/reports', params);
+    return this.post<void>("/api/v1/reports", params);
   }
 
   /**
@@ -967,11 +964,11 @@ export class Masto extends GatewayImpl {
    * @return Array of ScheduledStatus
    * @see https://docs.joinmastodon.org/methods/statuses/scheduled_statuses/
    */
-  @available({ since: '2.7.0' })
+  @available({ since: "2.7.0" })
   fetchScheduledStatuses(params?: PaginationParams) {
     return this.paginate<ScheduledStatus[], typeof params>(
-      '/api/v1/scheduled_statuses',
-      params,
+      "/api/v1/scheduled_statuses",
+      params
     );
   }
 
@@ -981,7 +978,7 @@ export class Masto extends GatewayImpl {
    * @return ScheduledStatus
    * @see https://docs.joinmastodon.org/methods/statuses/scheduled_statuses/
    */
-  @available({ since: '2.7.0' })
+  @available({ since: "2.7.0" })
   fetchScheduledStatus(id: string) {
     return this.get<ScheduledStatus>(`/api/v1/scheduled_statuses/${id}`);
   }
@@ -993,11 +990,11 @@ export class Masto extends GatewayImpl {
    * @return ScheduledStatus
    * @see https://docs.joinmastodon.org/api/rest/scheduled-statuses/#put-api-v1-scheduled-statuses-id
    */
-  @available({ since: '2.7.0' })
+  @available({ since: "2.7.0" })
   updateScheduledStatus(id: string, params: UpdateScheduledStatusParams) {
     return this.put<ScheduledStatus>(
       `/api/v1/scheduled_statuses/${id}`,
-      params,
+      params
     );
   }
 
@@ -1007,7 +1004,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/statuses/scheduled_statuses/
    */
-  @available({ since: '2.7.0' })
+  @available({ since: "2.7.0" })
   removeScheduledStatus(id: string) {
     return this.delete<void>(`/api/v1/scheduled_statuses/${id}`);
   }
@@ -1018,10 +1015,9 @@ export class Masto extends GatewayImpl {
    * @return Results
    * @see https://docs.joinmastodon.org/methods/search/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   search(params: SearchParams) {
-    const v = semver.gt(this.version, '2.4.1') ? 'v2' : 'v1';
-    return this.paginate<Results, typeof params>(`/api/${v}/search`, params);
+    return this.paginate<Results, typeof params>(`/api/v2/search`, params);
   }
 
   /**
@@ -1030,7 +1026,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchStatus(id: string) {
     return this.get<Status>(`/api/v1/statuses/${id}`);
   }
@@ -1041,7 +1037,7 @@ export class Masto extends GatewayImpl {
    * @return Context
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchStatusContext(id: string) {
     return this.get<Context>(`/api/v1/statuses/${id}/context`);
   }
@@ -1053,7 +1049,7 @@ export class Masto extends GatewayImpl {
    * @return Card
    * @see https://docs.joinmastodon.org/api/rest/statuses/#get-api-v1-statuses-id-card
    */
-  @available({ since: '0.0.0', until: '2.9.3' })
+  @available({ since: "0.0.0", until: "2.9.3" })
   fetchStatusCard(id: string) {
     return this.get<Card>(`/api/v1/statuses/${id}/card`);
   }
@@ -1064,7 +1060,7 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchStatusRebloggedBy(id: string) {
     return this.get<Account[]>(`/api/v1/statuses/${id}/reblogged_by`);
   }
@@ -1075,7 +1071,7 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchStatusFavouritedBy(id: string) {
     return this.get<Account[]>(`/api/v1/statuses/${id}/favourited_by`);
   }
@@ -1087,15 +1083,15 @@ export class Masto extends GatewayImpl {
    * @return Status. When scheduled_at is present, ScheduledStatus is returned instead.
    * @see https://docs.joinmastodon.org/api/rest/statuses/#post-api-v1-statuses
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   createStatus(params: CreateStatusParams, idempotencyKey?: string) {
     if (idempotencyKey) {
-      return this.post<Status>('/api/v1/statuses', params, {
-        headers: { 'Idempotency-Key': idempotencyKey },
+      return this.post<Status>("/api/v1/statuses", params, {
+        headers: { "Idempotency-Key": idempotencyKey },
       });
     }
 
-    return this.post<Status>('/api/v1/statuses', params);
+    return this.post<Status>("/api/v1/statuses", params);
   }
 
   /**
@@ -1104,7 +1100,7 @@ export class Masto extends GatewayImpl {
    * @return Status with source text and `media_attachments` or `poll`
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   removeStatus(id: string) {
     return this.delete<Status>(`/api/v1/statuses/${id}`);
   }
@@ -1115,7 +1111,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/api/rest/statuses/#post-api-v1-statuses-id-reblog
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   reblogStatus(id: string, params?: ReblogStatusParams) {
     return this.post<Status>(`/api/v1/statuses/${id}/reblog`, params);
   }
@@ -1126,7 +1122,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   unreblogStatus(id: string) {
     return this.post<Status>(`/api/v1/statuses/${id}/unreblog`);
   }
@@ -1137,7 +1133,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '1.6.0' })
+  @available({ since: "1.6.0" })
   pinStatus(id: string) {
     return this.post<Status>(`/api/v1/statuses/${id}/pin`);
   }
@@ -1148,7 +1144,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '1.6.0' })
+  @available({ since: "1.6.0" })
   unpinStatus(id: string) {
     return this.post<Status>(`/api/v1/statuses/${id}/unpin`);
   }
@@ -1159,9 +1155,9 @@ export class Masto extends GatewayImpl {
    * @return Array of Statuses
    * @see https://docs.joinmastodon.org/methods/accounts/bookmarks/
    */
-  @available({ since: '3.1.0' })
+  @available({ since: "3.1.0" })
   fetchBookmarks(params?: PaginationParams) {
-    return this.paginate<Status[], typeof params>('/api/v1/bookmarks', params);
+    return this.paginate<Status[], typeof params>("/api/v1/bookmarks", params);
   }
 
   /**
@@ -1170,7 +1166,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '3.1.0' })
+  @available({ since: "3.1.0" })
   bookmarkStatus(id: string) {
     return this.post<Status>(`/api/v1/statuses/${id}/bookmark`);
   }
@@ -1181,7 +1177,7 @@ export class Masto extends GatewayImpl {
    * @return Status
    * @see https://docs.joinmastodon.org/methods/statuses/
    */
-  @available({ since: '3.1.0' })
+  @available({ since: "3.1.0" })
   unbookmarkStatus(id: string) {
     return this.post<Status>(`/api/v1/statuses/${id}/unbookmark`);
   }
@@ -1192,11 +1188,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Status
    * @see https://docs.joinmastodon.org/methods/timelines/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchHomeTimeline(params?: FetchTimelineParams) {
     return this.paginate<Status[], typeof params>(
-      '/api/v1/timelines/home',
-      params,
+      "/api/v1/timelines/home",
+      params
     );
   }
 
@@ -1206,9 +1202,9 @@ export class Masto extends GatewayImpl {
    * @return Array of Status
    * @see https://docs.joinmastodon.org/methods/timelines/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchPublicTimeline(params?: FetchTimelineParams) {
-    return this.paginate<Status[], typeof params>('/api/v1/timelines/public', {
+    return this.paginate<Status[], typeof params>("/api/v1/timelines/public", {
       ...params,
     });
   }
@@ -1220,11 +1216,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Status
    * @see https://docs.joinmastodon.org/methods/timelines/
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   fetchTagTimeline(hashtag: string, params?: FetchTimelineParams) {
     return this.paginate<Status[], typeof params>(
       `/api/v1/timelines/tag/${hashtag}`,
-      params,
+      params
     );
   }
 
@@ -1235,11 +1231,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Status
    * @see https://docs.joinmastodon.org/methods/timelines/
    */
-  @available({ since: '2.1.0' })
+  @available({ since: "2.1.0" })
   fetchListTimeline(id: string, params?: FetchTimelineParams) {
     return this.paginate<Status[], typeof params>(
       `/api/v1/timelines/list/${id}`,
-      params,
+      params
     );
   }
 
@@ -1249,11 +1245,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Status
    * @see https://docs.joinmastodon.org/methods/timelines/
    */
-  @available({ since: '0.0.0', until: '2.9.3' })
+  @available({ since: "0.0.0", until: "2.9.3" })
   fetchDirectTimeline(params?: FetchTimelineParams) {
     return this.paginate<Status[], typeof params>(
-      '/api/v1/timelines/direct',
-      params,
+      "/api/v1/timelines/direct",
+      params
     );
   }
 
@@ -1263,11 +1259,11 @@ export class Masto extends GatewayImpl {
    * @return Array of Conversation
    * @see https://docs.joinmastodon.org/methods/timelines/conversations/
    */
-  @available({ since: '2.6.0' })
+  @available({ since: "2.6.0" })
   fetchConversations(params?: PaginationParams) {
     return this.paginate<Conversation[], typeof params>(
-      '/api/v1/conversations',
-      params,
+      "/api/v1/conversations",
+      params
     );
   }
 
@@ -1277,7 +1273,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/timelines/conversations/
    */
-  @available({ since: '2.6.0' })
+  @available({ since: "2.6.0" })
   removeConversation(id: string) {
     return this.delete<void>(`/api/v1/conversations/${id}`);
   }
@@ -1288,7 +1284,7 @@ export class Masto extends GatewayImpl {
    * @return Conversation
    * @see https://docs.joinmastodon.org/methods/timelines/conversations/
    */
-  @available({ since: '2.6.0' })
+  @available({ since: "2.6.0" })
   readConversation(id: string) {
     return this.post<Conversation>(`/api/v1/conversations/${id}/read`);
   }
@@ -1299,9 +1295,9 @@ export class Masto extends GatewayImpl {
    * @return The local representation of the followed account, as an Account.
    * @see https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#following-a-remote-user
    */
-  @available({ since: '0.0.0' })
+  @available({ since: "0.0.0" })
   followAccountByUsername(uri: string) {
-    return this.post<Account>('/api/v1/follows', { uri });
+    return this.post<Account>("/api/v1/follows", { uri });
   }
 
   /**
@@ -1309,9 +1305,9 @@ export class Masto extends GatewayImpl {
    * @return Preferences by key and value
    * @see https://docs.joinmastodon.org/methods/accounts/preferences/
    */
-  @available({ since: '2.8.0' })
+  @available({ since: "2.8.0" })
   fetchPreferences() {
-    return this.get<Preference>('/api/v1/preferences');
+    return this.get<Preference>("/api/v1/preferences");
   }
 
   /**
@@ -1320,9 +1316,9 @@ export class Masto extends GatewayImpl {
    * @return Array of Tag with History
    * @see https://docs.joinmastodon.org/methods/instance/trends/
    */
-  @available({ since: '3.0.0' })
+  @available({ since: "3.0.0" })
   fetchTrends(params?: FetchTrendsParams) {
-    return this.get<Tag[]>('/api/v1/trends', params);
+    return this.get<Tag[]>("/api/v1/trends", params);
   }
 
   /**
@@ -1331,9 +1327,9 @@ export class Masto extends GatewayImpl {
    * @return Markers
    * @see https://docs.joinmastodon.org/methods/timelines/markers/
    */
-  @available({ since: '3.0.0' })
+  @available({ since: "3.0.0" })
   fetchMarkers(params?: FetchMarkersParams) {
-    return this.get<Marker>('/api/v1/markers', params);
+    return this.get<Marker>("/api/v1/markers", params);
   }
 
   /**
@@ -1342,9 +1338,9 @@ export class Masto extends GatewayImpl {
    * @return Markers
    * @see https://github.com/tootsuite/mastodon/pull/11762
    */
-  @available({ since: '3.0.0' })
+  @available({ since: "3.0.0" })
   createMarkers(params: CreateMarkersParams) {
-    return this.post<Marker>('/api/v1/markers', params);
+    return this.post<Marker>("/api/v1/markers", params);
   }
 
   /**
@@ -1352,9 +1348,9 @@ export class Masto extends GatewayImpl {
    * @return Array of FeaturedTag
    * @see https://docs.joinmastodon.org/methods/accounts/featured_tags/
    */
-  @available({ since: '3.0.0' })
+  @available({ since: "3.0.0" })
   fetchFeaturedTags() {
-    return this.get<FeaturedTag[]>('/api/v1/featured_tags');
+    return this.get<FeaturedTag[]>("/api/v1/featured_tags");
   }
 
   /**
@@ -1363,9 +1359,9 @@ export class Masto extends GatewayImpl {
    * @return FeaturedTag
    * @see https://docs.joinmastodon.org/methods/accounts/featured_tags/
    */
-  @available({ since: '3.0.0' })
+  @available({ since: "3.0.0" })
   createFeaturedTag(params: CreateFeaturedTagParams) {
-    return this.post<FeaturedTag>('/api/v1/featured_tags', params);
+    return this.post<FeaturedTag>("/api/v1/featured_tags", params);
   }
 
   /**
@@ -1373,9 +1369,9 @@ export class Masto extends GatewayImpl {
    * @return Array of Tag with History
    * @see https://docs.joinmastodon.org/methods/accounts/featured_tags/
    */
-  @available({ since: '3.0.0' })
+  @available({ since: "3.0.0" })
   fetchSuggestedFeaturedTags() {
-    return this.get<Tag[]>('/api/v1/featured_tags/suggestions');
+    return this.get<Tag[]>("/api/v1/featured_tags/suggestions");
   }
 
   /**
@@ -1384,7 +1380,7 @@ export class Masto extends GatewayImpl {
    * @return N/A
    * @see https://docs.joinmastodon.org/methods/accounts/featured_tags/
    */
-  @available({ since: '3.0.0' })
+  @available({ since: "3.0.0" })
   removeFeaturedTag(id: string) {
     return this.delete<void>(`/api/v1/featured_tags/${id}`);
   }
@@ -1395,18 +1391,18 @@ export class Masto extends GatewayImpl {
    * @return Array of Account
    * @see https://docs.joinmastodon.org/methods/instance/directory/
    */
-  @available({ since: '3.0.0' })
+  @available({ since: "3.0.0" })
   fetchDirectory(params?: FetchDirectoryParams) {
-    return this.get<Account[]>('/api/v1/directory', params);
+    return this.get<Account[]>("/api/v1/directory", params);
   }
 
   /**
    * Fetch announcements
    * @return Announcements
    */
-  @available({ since: '3.1.0' })
+  @available({ since: "3.1.0" })
   fetchAnnouncements() {
-    return this.get<Announcement[]>('/api/v1/announcements');
+    return this.get<Announcement[]>("/api/v1/announcements");
   }
 
   /**
@@ -1414,7 +1410,7 @@ export class Masto extends GatewayImpl {
    * @param id ID of the announcement
    * @return Nothing
    */
-  @available({ since: '3.1.0' })
+  @available({ since: "3.1.0" })
   dismissAnnouncement(id: string) {
     return this.post<void>(`/api/v1/announcements/${id}/dismiss`);
   }
@@ -1425,7 +1421,7 @@ export class Masto extends GatewayImpl {
    * @param name Emoji string
    * @return Announcement
    */
-  @available({ since: '3.1.0' })
+  @available({ since: "3.1.0" })
   addReactionToAnnouncement(id: string, name: string) {
     return this.put<Reaction>(`/api/v1/announcements/${id}/reactions/${name}`);
   }
@@ -1436,10 +1432,10 @@ export class Masto extends GatewayImpl {
    * @param name Emoji string
    * @return Announcement
    */
-  @available({ since: '3.1.0' })
+  @available({ since: "3.1.0" })
   removeReactionFromAnnouncement(id: string, name: string) {
     return this.delete<Reaction>(
-      `/api/v1/announcements/${id}/reactions/${name}`,
+      `/api/v1/announcements/${id}/reactions/${name}`
     );
   }
 }

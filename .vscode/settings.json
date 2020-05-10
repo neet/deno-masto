@@ -1,4 +1,5 @@
 {
   "deno.enable": true,
-  "deno.importmap": "./import_map.json"
+  "deno.importmap": "./import_map.json",
+  // "typescript.validate.enable": false,
 }

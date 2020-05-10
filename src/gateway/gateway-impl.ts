@@ -1,6 +1,15 @@
-import { camelCase, snakeCase } from 'case/mod.ts';
+import { camelCase, snakeCase } from "case/mod.ts";
+import { connectWebSocket } from "ws/mod.ts";
 
-import { Instance } from '../entities.ts';
+import {
+  Gateway,
+  PaginateNext,
+  GatewayConstructorParams,
+  LoginParams,
+} from "./gateway.ts";
+import { Instance } from "../entities.ts";
+import { transformKeys } from "./transform-keys.ts";
+import { flattenData } from "./flatten-data.ts";
 import {
   MastoConflictError,
   MastoForbiddenError,
@@ -9,335 +18,190 @@ import {
   MastoRateLimitError,
   MastoUnauthorizedError,
   MastoUnprocessableEntityError,
-} from '../errors.ts';
+} from "../errors.ts";
 
-import { createFormData } from './create-form-data.ts';
-import {
-  Gateway,
-  GatewayConstructorParams,
-  LoginParams,
-  PaginateNext,
-} from './gateway.ts';
-import { transformKeys } from './transform-keys.ts';
+const MIME = {
+  JSON: "application/json",
+  FORM_DATA: "multipart/form-data",
+};
 
-/**
- * Mastodon network request wrapper
- * @param params Optional params
- */
 export class GatewayImpl implements Gateway {
-  /** URI of the instance */
-  uri: URL;
-  /** Streaming API URL of the instance */
-  streamingApiUrl?: URL;
-  /** Version of the current instance */
+  uri: string;
+  streamingApiUrl: string;
+  accessToken: string;
   version: string;
-  /** API token of the user */
-  accessToken?: string;
+  defaultOptions: RequestInit;
 
-  /**
-   * Login to Mastodon
-   * @param params Parameters
-   * @return Instance of Mastodon class
-   */
+  constructor(params: GatewayConstructorParams) {
+    this.uri = params.uri;
+    this.streamingApiUrl = params.streamingApiUrl;
+    this.accessToken = params.accessToken;
+    this.version = params.version;
+    this.defaultOptions = params.defaultOptions;
+  }
+
   static async login<T extends typeof GatewayImpl>(
     this: T,
-    _params: LoginParams,
+    params: LoginParams
   ) {
-    const params = { ..._params, version: '0.0.0' };
     const gateway = new this(params) as InstanceType<T>;
-    const instance = await gateway.get<Instance>('/api/v1/instance');
-
-    gateway.version = instance.version;
-    gateway.streamingApiUrl = new URL(instance.urls.streamingApi);
-
+    const instance = await gateway.get<Instance>("/api/v1/instance");
+    gateway.streamingApiUrl = instance.urls.streamingApi;
     return gateway;
   }
 
-  /**
-   * @param params Parameters
-   */
-  constructor(params: GatewayConstructorParams) {
-    this.uri = new URL(params.uri);
-    this.version = params.version;
+  private composeHeaders(init: HeadersInit) {
+    const headers = new Headers(init);
 
-    if (params.accessToken) {
-      this.accessToken = params.accessToken;
+    if (this.accessToken) {
+      headers.append("Authorization", `Bearer ${this.accessToken}`);
     }
 
-    if (params.streamingApiUrl) {
-      this.streamingApiUrl = new URL(params.streamingApiUrl);
+    if (headers.get("Content-Type") == null) {
+      headers.set("Content-Type", MIME.JSON);
     }
 
-    this.axios = axios.create({
-      baseURL: this.uri,
-      transformResponse: this.transformResponse,
-      ...(params.defaultOptions ?? {}),
-    });
-
-    this.axios.interceptors.request.use(this.transformConfig);
-    this.axios.defaults.headers.common['Content-Type'] = 'application/json';
-    this.axios.defaults.headers.common.Authorization = `Bearer ${this.accessToken}`;
+    return headers;
   }
 
-  /**
-   * Transform JSON to JS object
-   * @param response Response object
-   * @return Parsed entity
-   */
-  private async transformResponse(response: Response) {
-    const data = await response.json();
-
-    try {
-      const formattedData = transformKeys(data, camelCase);
-      return formattedData;
-    } catch {
-      return data;
-    }
-  }
-
-  /**
-   * Encode data in request options and add authorization / content-type header
-   * @param config Axios config
-   * @return New config
-   */
-  private transformRequest(request: Request) {
-    const config: AxiosRequestConfig = { ...originalConfig };
-
-    if (params) {
-      config.params = transformKeys(params, snakeCase);
-    }
-
-    if (data) {
-      config.data = transformKeys(data, snakeCase);
-    }
-
-    switch (config.headers['Content-Type']) {
-      case 'application/json':
-        config.data = JSON.stringify(config.data);
-
-        return config;
-
-      case 'multipart/form-data':
-        config.data = createFormData(config.data);
-
-        // In Node.js, axios doesn't set boundary data to the header
-        // so set it manually by using getHeaders of form-data node.js package
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (typeof (config.data as any).getHeaders === 'function') {
-          config.headers = {
-            ...config.headers,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            ...(config.data as any).getHeaders(),
-          };
-        }
-
-        return config;
-
+  private composeBody(data: unknown, contentType: string) {
+    switch (contentType) {
+      case MIME.JSON:
+        return JSON.stringify(data);
+      case MIME.FORM_DATA:
+        return new FormData(flattenData(data));
       default:
-        return config;
+        return;
     }
   }
 
-  /**
-   * Wrapper function for Axios
-   * @param options Axios options
-   * @param parse Whether parse response before return
-   * @return Parsed response object
-   */
-  protected async request<T>(options: AxiosRequestConfig) {
-    try {
-      return await this.axios.request<T>(options);
-    } catch (error) {
-      if (!isAxiosError(error)) {
+  private handleError(error: any) {
+    const status = error?.response?.status;
+    const message = error?.response?.data?.error ?? "Unexpected error occurred";
+
+    switch (status) {
+      case 401:
+        throw new MastoUnauthorizedError(message);
+      case 403:
+        throw new MastoForbiddenError(message);
+      case 404:
+        throw new MastoNotFoundError(message);
+      case 409:
+        throw new MastoConflictError(message);
+      case 410:
+        throw new MastoGoneError(message);
+      case 422:
+        throw new MastoUnprocessableEntityError(message);
+      case 429:
+        throw new MastoRateLimitError(message);
+      default:
         throw error;
-      }
+    }
+  }
 
-      const status = error?.response?.status;
-      const message =
-        error?.response?.data?.error ?? 'Unexpected error occurred';
+  private async request<T>(
+    rawUrl: string,
+    rawData: unknown,
+    rawInit: RequestInit
+  ) {
+    const url = new URL(rawUrl, this.uri);
+    const data = transformKeys(rawData, snakeCase);
+    const init = { ...rawInit, ...this.defaultOptions };
 
-      switch (status) {
-        case 401:
-          throw new MastoUnauthorizedError(message);
-        case 403:
-          throw new MastoForbiddenError(message);
-        case 404:
-          throw new MastoNotFoundError(message);
-        case 409:
-          throw new MastoConflictError(message);
-        case 410:
-          throw new MastoGoneError(message);
-        case 422:
-          throw new MastoUnprocessableEntityError(message);
-        case 429:
-          throw new MastoRateLimitError(message);
-        default:
-          throw error;
+    if (init.method === "GET") {
+      url.search = `?${new URLSearchParams(data)}`;
+    }
+
+    const headers = this.composeHeaders(init.headers);
+    const body = this.composeBody(data, headers.get("Content-Type"));
+
+    const response = await fetch(url.toString(), {
+      ...init,
+      headers,
+      body,
+    });
+
+    const json = response.json();
+    if (!response.ok) this.handleError(json);
+
+    return transformKeys<T>(json, camelCase);
+  }
+
+  async get<T>(path: string, data?: unknown, init?: RequestInit) {
+    const response = await this.request<T>(path, data, {
+      method: "GET",
+      ...init,
+    });
+    return response.data;
+  }
+
+  async post<T>(path: string, data?: unknown, init?: RequestInit) {
+    const response = await this.request<T>(path, data, {
+      method: "POST",
+      ...init,
+    });
+    return response.data;
+  }
+
+  async delete<T>(path: string, data?: unknown, init?: RequestInit) {
+    const response = await this.request<T>(path, data, {
+      method: "DELETE",
+      ...init,
+    });
+    return response.data;
+  }
+
+  async patch<T>(path: string, data?: unknown, init?: RequestInit) {
+    const response = await this.request<T>(path, data, {
+      method: "PATCH",
+      ...init,
+    });
+    return response.data;
+  }
+
+  async put<T>(path: string, data?: unknown, init?: RequestInit) {
+    const response = await this.request<T>(path, data, {
+      method: "PUT",
+      ...init,
+    });
+    return response.data;
+  }
+
+  async *stream<T>(path: string, params = {}) {
+    const url = new URL(path, this.streamingApiUrl);
+    url.search = `?${new URLSearchParams(params)}`;
+
+    const headers = new Headers();
+    headers.append("Sec-Websocket-Protocol", this.accessToken);
+
+    const socket = await connectWebSocket(url, headers);
+
+    for await (const message of socket) {
+      if (typeof message === "string") {
+        const json = JSON.parse(message);
+        const data = transformKeys(json, camelCase);
+        yield data as T;
       }
     }
   }
 
-  /**
-   * HTTP GET
-   * @param url URL to request
-   * @param params Query strings
-   * @param options Fetch API options
-   * @param parse Whether parse response before return
-   */
-  async get<T>(
-    path: string,
-    params: unknown = {},
-    options?: AxiosRequestConfig,
-  ) {
-    const response = await this.request<T>({
-      method: 'GET',
-      url: path,
-      params,
-      ...options,
-    });
-
-    return response.data;
-  }
-
-  /**
-   * HTTP POST
-   * @param url URL to request
-   * @param data Payload
-   * @param options Fetch API options
-   * @param parse Whether parse response before return
-   */
-  async post<T>(
-    path: string,
-    data: unknown = {},
-    options?: AxiosRequestConfig,
-  ) {
-    const response = await this.request<T>({
-      method: 'POST',
-      url: path,
-      data,
-      ...options,
-    });
-
-    return response.data;
-  }
-
-  /**
-   * HTTP PUT
-   * @param path Path to request
-   * @param data Payload
-   * @param options Fetch API options
-   * @param parse Whether parse response before return
-   */
-  async put<T>(path: string, data: unknown = {}, options?: AxiosRequestConfig) {
-    const response = await this.request<T>({
-      method: 'PUT',
-      url: path,
-      data,
-      ...options,
-    });
-
-    return response.data;
-  }
-
-  /**
-   * HTTP DELETE
-   * @param path Path to request
-   * @param data jPayload
-   * @param options Fetch API options
-   * @param parse Whether parse response before return
-   */
-  async delete<T>(
-    path: string,
-    data: unknown = {},
-    options?: AxiosRequestConfig,
-  ) {
-    const response = await this.request<T>({
-      method: 'DELETE',
-      url: path,
-      data,
-      ...options,
-    });
-
-    return response.data;
-  }
-
-  /**
-   * HTTP PATCH
-   * @param path Path to request
-   * @param data Payload
-   * @param options Fetch API options
-   * @param parse Whether parse response before return
-   */
-  async patch<T>(
-    path: string,
-    data: unknown = {},
-    options?: AxiosRequestConfig,
-  ) {
-    const response = await this.request<T>({
-      method: 'PATCH',
-      url: path,
-      data,
-      ...options,
-    });
-
-    return response.data;
-  }
-
-  /**
-   * Connect to a streaming
-   * @param path Path to stream
-   * @param params Query parameters
-   * @return Instance of EventEmitter
-   */
-  stream(path: string, params: ParsedUrlQueryInput = {}) {
-    const protocols = [];
-
-    // Since v2.8.4, it is supported to pass access token with`Sec-Websocket-Protocol`
-    // https://github.com/tootsuite/mastodon/pull/10818
-    if (this.accessToken && this.version && semver.gte(this.version, '2.8.4')) {
-      protocols.push(this.accessToken);
-    } else if (this.accessToken) {
-      params.accessToken = this.accessToken;
-    }
-
-    const encodedParams = querystring.stringify(
-      transformKeys<ParsedUrlQueryInput>(params, snakeCase),
-    );
-
-    const url =
-      this.streamingApiUrl +
-      path +
-      (Object.keys(params).length ? '?' + encodedParams : '');
-
-    return new EventHandlerImpl().connect(url, protocols);
-  }
-
-  /**
-   * Generate an iterable of the pagination.
-   * @param initialURL Path for the endpoint
-   * @param initialParams Query parameter
-   * @return Async iterable iterator of the pages.
-   * See also [MDN article about generator/iterator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators)
-   */
   async *paginate<T, U>(
     initialUrl: string,
     initialParams?: U,
+    init?: RequestInit
   ): AsyncGenerator<T, void, PaginateNext<U> | undefined> {
     let nextUrl: string | undefined = initialUrl;
     let nextParams = initialParams;
 
     while (nextUrl) {
-      const response: AxiosResponse<T> = await this.request<T>({
-        method: 'GET',
-        url: nextUrl,
-        params: nextParams,
+      const response = await this.request<T>(nextUrl, nextParams, {
+        method: "GET",
+        ...init,
       });
 
-      // Yield will be argument of next()
       const options = yield response.data;
-      // Get next URL from "next" in the link header
       const linkHeaderNext = response.headers?.link?.match(
-        /<(.+?)>; rel="next"/,
+        /<(.+?)>; rel="next"/
       )?.[1];
 
       if (options?.reset) {

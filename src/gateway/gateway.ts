@@ -19,27 +19,39 @@ export interface Gateway {
   streamingApiUrl: string;
   version?: string;
   accessToken?: string;
-  get<T>(path: string, params: unknown, options?: Request): Promise<T>;
-  post<T>(path: string, data: unknown, options?: Request): Promise<T>;
-  put<T>(path: string, data: unknown, options?: Request): Promise<T>;
-  patch<T>(path: string, data: unknown, options?: Request): Promise<T>;
-  delete<T>(path: string, data: unknown, options?: Request): Promise<T>;
-  stream<T>(path: string, params: URLSearchParams): AsyncIterableIterator<T>;
-  paginate<T, U>(url: string, params?: U): AsyncGenerator<T, void, PaginateNext<U>>;
+  get<T>(path: string, data: unknown, options?: RequestInit): Promise<T>;
+  post<T>(path: string, data: unknown, options?: RequestInit): Promise<T>;
+  put<T>(path: string, data: unknown, options?: RequestInit): Promise<T>;
+  patch<T>(path: string, data: unknown, options?: RequestInit): Promise<T>;
+  delete<T>(path: string, data: unknown, options?: RequestInit): Promise<T>;
+  paginate<T, U>(
+    url: string,
+    data?: U,
+    options?: RequestInit
+  ): AsyncGenerator<T, void, PaginateNext<U>>;
+  stream<T>(
+    path: string,
+    data: unknown
+  ): Promise<AsyncGenerator<T, void, void>>;
 }
 
 export interface GatewayConstructorParams {
   /** URI of the instance */
-  uri: URL;
+  uri: string;
   /** Streaming API URL */
-  streamingApiUrl?: URL;
+  streamingApiUrl?: string;
   /** Access token of the user */
   accessToken?: string;
+  /** Version of the instance */
+  version?: string;
   /** Default request object */
-  defaultOptions?: Request;
+  defaultOptions?: RequestInit;
 }
 
-export type LoginParams = Omit<GatewayConstructorParams, "streamingApiUrl">;
+export type LoginParams = Omit<
+  GatewayConstructorParams,
+  "streamingApiUrl" | "version"
+>;
 
 export interface GatewayConstructor {
   new (params: GatewayConstructorParams): Gateway;

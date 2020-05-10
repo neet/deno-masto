@@ -7,7 +7,7 @@ import {
   PushSubscriptionAlerts,
   Source,
   StatusVisibility,
-} from '../../entities';
+} from '../../entities.ts';
 
 export interface PaginationParams {
   /** **Internal parameter.** Use HTTP Link header from response for pagination. */
