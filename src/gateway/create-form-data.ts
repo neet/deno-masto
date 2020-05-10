@@ -1,7 +1,4 @@
-// eslint-disable-next-line import/no-unassigned-import
-import 'isomorphic-form-data';
-
-import { isObject } from './is-object';
+import { isObject } from './is-object.ts';
 
 /**
  * Encode nested object to form-data compatible flat object
@@ -47,7 +44,6 @@ export function createFormData(
     return result;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   result.append(parentKey, encodable as any);
 
   return result;

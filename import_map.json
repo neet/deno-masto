@@ -1,1 +1,10 @@
-{}
+{
+  "imports": {
+    "ws/": "https://deno.land/std/ws",
+    "testing/": "https://deno.land/std/testing/",
+    "case/": "https://deno.land/x/case/",
+    "semver/": "https://deno.land/x/semver/",
+    "expect/": "https://deno.land/x/expect/",
+    "mock/": "https://deno.land/x/mock/"
+  }
+}

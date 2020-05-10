@@ -1,13 +1,11 @@
-import {
-  Account,
-  Application,
-  Attachment,
-  Card,
-  Emoji,
-  Mention,
-  Poll,
-  Tag,
-} from '.';
+import { Account } from './account.ts';
+import { Application } from './application.ts';
+import { Attachment } from './attachment.ts';
+import { Card } from './card.ts';
+import { Emoji } from './emoji.ts';
+import { Mention } from './mention.ts';
+import { Poll } from './poll.ts';
+import { Tag } from './tag.ts';
 
 export type StatusVisibility = 'public' | 'unlisted' | 'private' | 'direct';
 

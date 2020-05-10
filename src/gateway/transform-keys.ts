@@ -1,4 +1,4 @@
-import { isObject } from './is-object';
+import { isObject } from './is-object.ts';
 
 const fromEntries = <T>(entries: [string, unknown][]) => {
   const object: { [key: string]: unknown } = {};
@@ -7,7 +7,6 @@ const fromEntries = <T>(entries: [string, unknown][]) => {
     object[key] = value;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (object as any) as T;
 };
 

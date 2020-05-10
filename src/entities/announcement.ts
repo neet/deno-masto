@@ -1,4 +1,7 @@
-import { Emoji, Mention, Reaction, Tag } from '.';
+import { Emoji } from "./emoji.ts";
+import { Mention } from "./mention.ts";
+import { Reaction } from "./reaction.ts";
+import { Tag } from "./tag.ts";
 
 export interface Announcement {
   id: string;

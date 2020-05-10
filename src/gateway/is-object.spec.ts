@@ -1,6 +1,7 @@
-import { isObject } from '../is-object';
+import { isObject } from './is-object.ts';
+import { expect } from 'https://deno.land/x/expect/mod.ts'
 
-test('typed isObject', () => {
+Deno.test('typed isObject', () => {
   expect(isObject('hello')).toBe(false);
   expect(isObject(123)).toBe(false);
   expect(isObject(NaN)).toBe(false);

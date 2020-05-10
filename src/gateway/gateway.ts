@@ -1,7 +1,3 @@
-import { ParsedUrlQueryInput } from 'querystring';
-
-import { EventHandler } from './event-handler';
-
 /**
  * Argument of `Gateway.paginate().next()`.
  * When reset = true specified, other params won't be accepted
@@ -18,42 +14,34 @@ export type PaginateNext<Params> =
       params?: Params;
     };
 
-export interface Gateway<Options = undefined> {
+export interface Gateway {
   uri: string;
   streamingApiUrl: string;
   version?: string;
   accessToken?: string;
-  get<T>(path: string, params: unknown, options?: Options): Promise<T>;
-  post<T>(path: string, data: unknown, options?: Options): Promise<T>;
-  put<T>(path: string, data: unknown, options?: Options): Promise<T>;
-  patch<T>(path: string, data: unknown, options?: Options): Promise<T>;
-  delete<T>(path: string, data: unknown, options?: Options): Promise<T>;
-  stream(path: string, params: ParsedUrlQueryInput): Promise<EventHandler>;
-  paginate<T, U>(
-    url: string,
-    params?: U,
-  ): AsyncGenerator<T, void, PaginateNext<U>>;
+  get<T>(path: string, params: unknown, options?: Request): Promise<T>;
+  post<T>(path: string, data: unknown, options?: Request): Promise<T>;
+  put<T>(path: string, data: unknown, options?: Request): Promise<T>;
+  patch<T>(path: string, data: unknown, options?: Request): Promise<T>;
+  delete<T>(path: string, data: unknown, options?: Request): Promise<T>;
+  stream<T>(path: string, params: URLSearchParams): AsyncIterableIterator<T>;
+  paginate<T, U>(url: string, params?: U): AsyncGenerator<T, void, PaginateNext<U>>;
 }
 
-export interface GatewayConstructorParams<T = undefined> {
+export interface GatewayConstructorParams {
   /** URI of the instance */
-  uri: string;
+  uri: URL;
   /** Streaming API URL */
-  streamingApiUrl?: string;
-  /** Version of the instance */
-  version: string;
+  streamingApiUrl?: URL;
   /** Access token of the user */
   accessToken?: string;
-  /** Axios configurations. See [Axios'](https://github.com/axios/axios#request-config) docs */
-  defaultOptions?: T;
+  /** Default request object */
+  defaultOptions?: Request;
 }
 
-export type LoginParams = Omit<
-  GatewayConstructorParams,
-  'version' | 'streamingApiUrl'
->;
+export type LoginParams = Omit<GatewayConstructorParams, "streamingApiUrl">;
 
-export interface GatewayConstructor<Options = undefined> {
-  new (params: GatewayConstructorParams<Options>): Gateway;
+export interface GatewayConstructor {
+  new (params: GatewayConstructorParams): Gateway;
   login(params: LoginParams): Promise<Gateway>;
 }

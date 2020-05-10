@@ -1,5 +1,5 @@
-import { Account } from './account';
-import { Status } from './status';
+import { Account } from './account.ts';
+import { Status } from './status.ts';
 
 export type NotificationType =
   | 'mention'

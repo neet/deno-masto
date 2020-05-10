@@ -1,4 +1,5 @@
-import { Account, Status } from '.';
+import { Account } from './account.ts';
+import { Status } from './status.ts';
 
 /**
  * Admin-level information about a filed report.

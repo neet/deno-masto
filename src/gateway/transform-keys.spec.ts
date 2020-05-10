@@ -1,5 +1,5 @@
 import { transformKeys } from '../transform-keys';
-import { camelCase } from 'change-case';
+import { camelCase } from 'case';
 
 describe('transformKeys', () => {
   it('transforms a flat object', () => {

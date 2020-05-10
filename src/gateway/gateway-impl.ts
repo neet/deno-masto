@@ -1,10 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { camelCase, snakeCase } from 'change-case';
-import normalizeUrl from 'normalize-url'; // eslint-disable-line import/default
-import querystring, { ParsedUrlQueryInput } from 'querystring';
-import semver from 'semver';
+import { camelCase, snakeCase } from 'case/mod.ts';
 
-import { Instance } from '../entities';
+import { Instance } from '../entities.ts';
 import {
   MastoConflictError,
   MastoForbiddenError,
@@ -13,75 +9,30 @@ import {
   MastoRateLimitError,
   MastoUnauthorizedError,
   MastoUnprocessableEntityError,
-} from '../errors';
-import { createFormData } from './create-form-data';
-import { EventHandlerImpl } from './event-handler-impl';
+} from '../errors.ts';
+
+import { createFormData } from './create-form-data.ts';
 import {
   Gateway,
   GatewayConstructorParams,
   LoginParams,
   PaginateNext,
-} from './gateway';
-import { isAxiosError } from './is-axios-error';
-import { transformKeys } from './transform-keys';
+} from './gateway.ts';
+import { transformKeys } from './transform-keys.ts';
 
 /**
  * Mastodon network request wrapper
  * @param params Optional params
  */
-export class GatewayImpl implements Gateway<AxiosRequestConfig> {
-  /** Configured axios instance */
-  private axios: AxiosInstance;
+export class GatewayImpl implements Gateway {
   /** URI of the instance */
-  private _uri = '';
+  uri: URL;
   /** Streaming API URL of the instance */
-  private _streamingApiUrl = '';
+  streamingApiUrl?: URL;
   /** Version of the current instance */
   version: string;
   /** API token of the user */
   accessToken?: string;
-
-  /**
-   * @param params Parameters
-   */
-  constructor(params: GatewayConstructorParams<AxiosRequestConfig>) {
-    this.uri = params.uri;
-    this.version = params.version;
-
-    if (params.accessToken) {
-      this.accessToken = params.accessToken;
-    }
-
-    if (params.streamingApiUrl) {
-      this.streamingApiUrl = params.streamingApiUrl;
-    }
-
-    this.axios = axios.create({
-      baseURL: this.uri,
-      transformResponse: this.transformResponse,
-      ...(params.defaultOptions ?? {}),
-    });
-
-    this.axios.interceptors.request.use(this.transformConfig);
-    this.axios.defaults.headers.common['Content-Type'] = 'application/json';
-    this.axios.defaults.headers.common.Authorization = `Bearer ${this.accessToken}`;
-  }
-
-  get uri() {
-    return this._uri;
-  }
-
-  set uri(uri: string) {
-    this._uri = normalizeUrl(uri);
-  }
-
-  get streamingApiUrl() {
-    return this._streamingApiUrl;
-  }
-
-  set streamingApiUrl(streamingApiUrl: string) {
-    this._streamingApiUrl = normalizeUrl(streamingApiUrl);
-  }
 
   /**
    * Login to Mastodon
@@ -97,9 +48,35 @@ export class GatewayImpl implements Gateway<AxiosRequestConfig> {
     const instance = await gateway.get<Instance>('/api/v1/instance');
 
     gateway.version = instance.version;
-    gateway.streamingApiUrl = instance.urls.streamingApi;
+    gateway.streamingApiUrl = new URL(instance.urls.streamingApi);
 
     return gateway;
+  }
+
+  /**
+   * @param params Parameters
+   */
+  constructor(params: GatewayConstructorParams) {
+    this.uri = new URL(params.uri);
+    this.version = params.version;
+
+    if (params.accessToken) {
+      this.accessToken = params.accessToken;
+    }
+
+    if (params.streamingApiUrl) {
+      this.streamingApiUrl = new URL(params.streamingApiUrl);
+    }
+
+    this.axios = axios.create({
+      baseURL: this.uri,
+      transformResponse: this.transformResponse,
+      ...(params.defaultOptions ?? {}),
+    });
+
+    this.axios.interceptors.request.use(this.transformConfig);
+    this.axios.defaults.headers.common['Content-Type'] = 'application/json';
+    this.axios.defaults.headers.common.Authorization = `Bearer ${this.accessToken}`;
   }
 
   /**
@@ -107,9 +84,12 @@ export class GatewayImpl implements Gateway<AxiosRequestConfig> {
    * @param response Response object
    * @return Parsed entity
    */
-  private transformResponse(data: string, _headers: unknown) {
+  private async transformResponse(response: Response) {
+    const data = await response.json();
+
     try {
-      return transformKeys(JSON.parse(data), camelCase);
+      const formattedData = transformKeys(data, camelCase);
+      return formattedData;
     } catch {
       return data;
     }
@@ -120,11 +100,7 @@ export class GatewayImpl implements Gateway<AxiosRequestConfig> {
    * @param config Axios config
    * @return New config
    */
-  private transformConfig({
-    params,
-    data,
-    ...originalConfig
-  }: AxiosRequestConfig) {
+  private transformRequest(request: Request) {
     const config: AxiosRequestConfig = { ...originalConfig };
 
     if (params) {

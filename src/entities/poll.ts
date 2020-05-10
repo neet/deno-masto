@@ -1,4 +1,4 @@
-import { Emoji } from './emoji';
+import { Emoji } from './emoji.ts';
 
 export interface PollOption {
   /** The text value of the poll option. String. */
